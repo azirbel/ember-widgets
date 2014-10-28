@@ -100,7 +100,7 @@ module.exports = (grunt) ->
       options:
         includeSourceURL: yes
       "dist/js/ember-widgets.js":  "build/src/ember_widgets.js"
-      "gh_pages/app.js":        "build/app/app.js"
+      "gh_pages/app.js":           "build/app/app.js"
 
     less:
       development:
@@ -141,6 +141,13 @@ module.exports = (grunt) ->
           from: /Ember.Widgets.VERSION = '.*\..*\..*'/
           to: "Ember.Widgets.VERSION = '<%=pkg.version%>'"
         }]
+      overview_page:
+        src: ['app/templates/ember_widgets/overview.hbs']
+        overwrite: true,
+        replacements: [{
+          from: /The current version is .*\..*\..*./
+          to: "The current version is <%=pkg.version%>."
+        }]
 
     # Copy build/app/assets/css into gh_pages/asset and other assets from app
     copy:
@@ -178,16 +185,16 @@ module.exports = (grunt) ->
         tasks: [ "coffee:srcs", "neuter", "uglify", "usebanner:js" ]
       test:
         files: [ "tests/**/*.coffee"]
-        tasks: [ "coffee:tests", "neuter" ]
+        tasks: [ "coffee:tests", "neuter", "uglify", "usebanner:js" ]
       src_handlebars:
         files: [ "src/**/*.hbs" ]
         tasks: [ "emberTemplates", "neuter", "uglify", "usebanner:js" ]
       app:
         files: [ "app/**/*.coffee", "dependencies/**/*.js", "vendor/**/*.js" ]
-        tasks: [ "coffee:app", "neuter" ]
+        tasks: [ "coffee:app", "neuter", "uglify", "usebanner:js" ]
       app_handlebars:
         files: [ "app/**/*.hbs"]
-        tasks: [ "emberTemplates", "neuter" ]
+        tasks: [ "emberTemplates", "neuter", "uglify", "usebanner:js" ]
       less:
         files: [ "src/**/*.less", "src/**/*.css",
                  "dependencies/**/*.less", "dependencies/**/*.css",
